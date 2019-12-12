@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Keycloak from 'keycloak-js';
+import UserInfo from './UserInfo';
+import Logout from './Logout';
 
 class Secured extends Component {
 	constructor(props) {
@@ -11,7 +13,7 @@ class Secured extends Component {
 	}
 
 	componentDidMount() {
-		const keycloak =  Keycloak('/keycloak.json');
+		const keycloak = Keycloak('/keycloak.json');
 		keycloak.init({ onLoad: 'login-required', promiseType: 'native' }).then((authenticated) => {
 			this.setState({ keycloak: keycloak, authenticated: authenticated });
 		});
@@ -26,8 +28,11 @@ class Secured extends Component {
 							This is a Keycloak-secured component of your application. You should not be able to see this
 							unless you've authenticated with Keycloak
 						</p>
+						<UserInfo keycloak={this.state.keycloak} />
+						<Logout keycloak={this.state.keycloak} />
 					</div>
 				);
+			else return <div>Unable to authenticate!</div>;
 		}
 		return <div>Initializing Keycloak...</div>;
 	}
